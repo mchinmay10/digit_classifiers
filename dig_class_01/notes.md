@@ -11,7 +11,8 @@ Dimensionality information is lost during flattening. But all the feature based 
 ### What can the 10 output neurons?
 
 They can represent the following things:
-a. Either binary output values that would then represent the digits from 0-9. For example, the output [0, 0, 0, 0, 0, 0, 0, 1, 0, 0] represents the fact that the input image is the digit '7',
-b. They can also represent probability values representing the likelihood of an input image being a particular digit. For example, the index of the neuron having the largest probability value, would tell us what input digit it was,
-c. Thirdly, the output layer could also represent 10 different, but richer representation of the input layer. Richer in the sense of the characteristics of the digits; an example being [ number of horizontal strokes, number of vertical strokes, amount of curvature, presence of a closed loop, brightness in the top half, brightness in the bottom half,
-left-right symmetry, center of mass, stroke thickness, overall ink density ] (The main aim of the third hypothesis is to understand that every layer does not necessarily give theoutput representation; many hidden layers convert input to a different yet more understandable and learnable representation by performing transformations on vectors using matrices).
+
+1. Either binary output values that would then represent the digits from 0-9. For example, the output [0, 0, 0, 0, 0, 0, 0, 1, 0, 0] represents the fact that the input image is the digit '7',
+2. They can also represent probability values representing the likelihood of an input image being a particular digit. For example, the index of the neuron having the largest probability value, would tell us what input digit it was,
+3. Thirdly, the output layer could also represent 10 different, but richer representation of the input layer. Richer in the sense of the characteristics of the digits; an example being [ number of horizontal strokes, number of vertical strokes, amount of curvature, presence of a closed loop, brightness in the top half, brightness in the bottom half,
+   left-right symmetry, center of mass, stroke thickness, overall ink density ] (The main aim of the third hypothesis is to understand that every layer does not necessarily give theoutput representation; many hidden layers convert input to a different yet more understandable and learnable representation by performing transformations on vectors using matrices).
