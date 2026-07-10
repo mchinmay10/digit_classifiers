@@ -1,0 +1,6 @@
+# Dependency folders
+scripts/__pycache__/
+venv/
+
+# Dataset files
+data/
