@@ -24,5 +24,5 @@ def forward_test():
 
 
 if __name__ == "__main__":
-    print(f"----Executing test cases for the layers.py file----")
+    print(f"----Running test cases for the layers.py file----")
     forward_test()

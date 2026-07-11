@@ -106,7 +106,7 @@ def dim_of_matrix_test():
 
 
 if __name__ == "__main__":
-    print(f"----Running test cases for matrix.py function----")
+    print(f"----Running test cases for matrix.py file----")
     mat_shape_test()
     mat_transpose_test()
     mat_mul_test()

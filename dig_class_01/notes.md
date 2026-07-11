@@ -33,4 +33,4 @@ Instead, if the weights are assigned random values intially, this would mean tha
 ### What role does bias play?
 
 Bias plays the role of defining the intrinsic activation value of a neuron. In fact, during the start of the learning phase, it is best to set the bias to 0. And then as learning occurs and the importance of different neurons vary, bias is changed and fine-tuned. \
-To give a more intuitive explanation, think of bias as the neuron's tendency to activate. Basically answering the question: how likely the input is going to negatively or positively affect the output of a neuron ? This question is answered by the value of the bias. \
+To give a more intuitive explanation, think of bias as the neuron's tendency to activate. Basically answering the question: how likely the input is going to negatively or positively affect the output of a neuron ? This question is answered by the value of the bias.
