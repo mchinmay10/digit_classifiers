@@ -4,16 +4,33 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# implementing the step function from scratch
-def step(x):
+# implementing the step function for single input
+def step_single(x):
     if x > 0:
         return 1
     else:
         return 0
 
 
-# implementing the sigmoid function from scratch
-def sigmoid(x):
+# implementing step function for an array of nums as input
+def step_arr(nums):
+    step_array = []
+    for x in nums:
+        step_array.append(step_single(x))
+
+    return step_array
+
+
+# the final step function with added flexibility
+def step(input):
+    if type(input) != list:
+        return step_single(input)
+    else:
+        return step_arr(input)
+
+
+# implementing the sigmoid function for single input
+def sigmoid_single(x):
     return 1 / (1 + math.exp(-x))
 
 
@@ -21,15 +38,23 @@ def sigmoid(x):
 def sigmoid_arr(nums):
     sig_array = []
     for x in nums:
-        sig_array.append(sigmoid(x))
+        sig_array.append(sigmoid_single(x))
 
     return sig_array
+
+
+# the final sigmoid function with added flexibility
+def sigmoid(input):
+    if type(input) != list:
+        return sigmoid_single(input)
+    else:
+        return sigmoid_arr(input)
 
 
 # generate a graph of sigmoid function over a range of inputs
 def generate_sigmoid_plot(nums):
     x = np.array(nums)
-    y = sigmoid_arr(nums)
+    y = sigmoid(nums)
 
     plt.figure(figsize=(15, 15))
 
@@ -41,6 +66,31 @@ def generate_sigmoid_plot(nums):
     plt.grid(True, alpha=0.6)
 
     plt.show()
+
+
+# implementing the rectified linear unit function from scratch
+def relu_single(x):
+    if x > 0:
+        return x
+    else:
+        return 0
+
+
+# rectified linear unit for an array of nums as input
+def relu_arr(nums):
+    relu_array = []
+    for x in nums:
+        relu_array.append(relu_single(x))
+
+    return relu_array
+
+
+# the final relu function with added flexibility
+def relu(input):
+    if type(input) != list:
+        return relu_single(input)
+    else:
+        return relu_arr(input)
 
 
 # Test cases
