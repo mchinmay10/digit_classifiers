@@ -34,3 +34,9 @@ Instead, if the weights are assigned random values intially, this would mean tha
 
 Bias plays the role of defining the intrinsic activation value of a neuron. In fact, during the start of the learning phase, it is best to set the bias to 0. And then as learning occurs and the importance of different neurons vary, bias is changed and fine-tuned. \
 To give a more intuitive explanation, think of bias as the neuron's tendency to activate. Basically answering the question: how likely the input is going to negatively or positively affect the output of a neuron ? This question is answered by the value of the bias.
+
+### Should the network care only whether the prediction is correct, or should it also care how confident it was? Explain.
+
+As a very humane thought process, I believe that the network should also care how confident it was while giving a prediction. This is because if we instruct our network in a very binary sense , it would never know the steps it has to take to give out more and more correct predictions when it sees new data (sees data it hasn't been trained on). So while we should point out to the network that whether it has done a mistake or not, we should also give a direction to the network to minimise it's chance of repeating the same mistake (same mistake as in mistake while performing the same task) again and again. \
+In addition to this, an important nuance is in differentiating slight mistakes from severe mistakes. \
+So, to frame this answer in a better way; 'A binary notion of correct / incorrect throws away useful information. Measuring confidence gives us a richer description of how good or bad a prediction is.
