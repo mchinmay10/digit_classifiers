@@ -133,7 +133,7 @@ def dense_layer_v2_forward_test():
         [round(random.random(), 2) for _ in range(weights_per_neuron)]
         for _ in range(num_neurons)
     ]
-    l = DenseLayer_v2(3, weight_matrix, b)
+    l = DenseLayer_v2(num_neurons, weight_matrix, b)
     output = l.layer_forward(input)
     print("----Printing output of Dense Layer v2 l----")
     time.sleep(2)
