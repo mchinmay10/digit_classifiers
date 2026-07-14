@@ -12,10 +12,12 @@ Contains the following functions:
 10. dot
 11. magnitude
 12. distance
+13. generate_random_vector
 """
 
 import time
 import math
+import random
 from data_helper import vector_length
 
 
@@ -144,6 +146,11 @@ def distance(u, v):
     else:
         print(f"distance(u, v) is invalid as {vector_length(u)} != {vector_length(v)}")
         return 0
+
+
+# generate random vector of given length 'n'
+def generate_random_vector(n):
+    return [round(random.random(), 2) for _ in range(n)]
 
 
 # Test cases
