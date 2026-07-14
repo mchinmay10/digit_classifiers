@@ -2,7 +2,7 @@ import time
 import random
 from vector import dot
 from activations import step, sigmoid, relu
-from losses import squared_error
+from losses import mean_squared_error
 
 
 # A Neuron is the basic computation unit of a Neural Network
@@ -95,7 +95,7 @@ def simulate_fwd_pass():
     print("Executing complete forward pass...")
     time.sleep(3)
     input = [round(random.random(), 2) for _ in range(2)]
-    target = 1
+    target = [1]
     num_neurons = 1
     weights_per_neurons = len(input)
     weight_matrix = [
@@ -108,7 +108,7 @@ def simulate_fwd_pass():
     activ_output = l.layer_forward_debug(input)
     print(f"----Printing loss for given taget: {target}----")
     time.sleep(2)
-    print(f"Loss: {round(squared_error(target, activ_output[0]), 3)}")
+    print(f"Loss: {round(mean_squared_error(target, activ_output), 3)}")
 
 
 # Test cases:
