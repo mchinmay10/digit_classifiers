@@ -2,6 +2,7 @@ import time
 import random
 from vector import dot
 from activations import step, sigmoid, relu
+from losses import mean_squared_error
 
 
 # A Neuron is the basic computation unit of a Neural Network
@@ -63,10 +64,22 @@ class DenseLayer_v2:
 
         return output
 
+    def layer_forward_debug(self, x):
+        print(f"Input vector: {x}")
+        for i in range(self.num_neurons):
+            print(f"----For Neuron {i+1}----")
+            print(f"Weights: {self.weight_matrix[i]}")
+            print(f"Weighted Sum: {dot(x, self.weight_matrix[i])}")
+        print(f"Value of Bias: {self.bias}")
+        activ_output = self.layer_forward(x)
+        print(f"Activation output: {activ_output}")
+
+        return activ_output
+
 
 # function to predict the output of the neural network.
 # we use the logic that index of neuron with the highest probability represents the predicted digit
-def predict(output):
+def predict_digit(output):
     out_index = -1
     max_prob = 0
     for index, prob in enumerate(output):
@@ -75,6 +88,27 @@ def predict(output):
             out_index = index
 
     return out_index
+
+
+# function to perform a complete forward pass
+def simulate_fwd_pass():
+    print("Executing complete forward pass...")
+    time.sleep(3)
+    input = [round(random.random(), 2) for _ in range(2)]
+    target = [1]
+    num_neurons = 1
+    weights_per_neurons = len(input)
+    weight_matrix = [
+        [0.5 for _ in range(weights_per_neurons)] for _ in range(num_neurons)
+    ]
+    bias = 0
+    l = DenseLayer_v2(num_neurons, weight_matrix, bias)
+    print("----Printing verbose output of Dense Layer v2 forward pass----")
+    time.sleep(2)
+    activ_output = l.layer_forward_debug(input)
+    print(f"----Printing loss for given taget: {target}----")
+    time.sleep(2)
+    print(f"Loss: {round(mean_squared_error(target, activ_output), 3)}")
 
 
 # Test cases:
@@ -140,11 +174,11 @@ def dense_layer_v2_forward_test():
     print(f"Layer output: {[round(x, 2) for x in output]}")
 
 
-def predict_test():
+def predict_digit_test():
     print(f"Executing test cases for predict function...")
     time.sleep(3)
     output = [round(random.random(), 2) for _ in range(10)]
-    print(f"Predicted digit = {predict(output)}")
+    print(f"Predicted digit = {predict_digit(output)}")
 
 
 if __name__ == "__main__":
@@ -153,4 +187,5 @@ if __name__ == "__main__":
     # ten_neuron_fwd_test()
     # dense_layer_v1_forward_test()
     # dense_layer_v2_forward_test()
-    # predict_test()
+    # predict_digit_test()
+    simulate_fwd_pass()
