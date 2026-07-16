@@ -1,9 +1,16 @@
 import time
 import random
 from vector import dot
-from activations import step, sigmoid, relu
+from activations import sigmoid
 from losses import mean_squared_error
 from visual import clear_screen
+from layer_helper import (
+    get_weights_from_user,
+    get_bias_from_user,
+    get_dummy_targets_from_user,
+    get_weight_index_from_user,
+    get_nw_input_from_user,
+)
 
 
 # A Neuron is the basic computation unit of a Neural Network
@@ -189,62 +196,6 @@ def temp_weight_change(
     layer.weight_matrix[i][j] = save_weight
 
 
-# function to recieve weights from user (mainly for manual optimisation and initialisation purpose)
-def get_weights_from_user(num_neurons, input_len):
-    weight_matrix = [[0.0 for _ in range(input_len)] for _ in range(num_neurons)]
-    print("Enter weight matrix")
-    time.sleep(3)
-    for i in range(num_neurons):
-        for j in range(input_len):
-            weight_matrix[i][j] = float(
-                input(f"Value of w at: row {i} and column {j}: ")
-            )
-
-    return weight_matrix
-
-
-# function to recieve bias term from user
-def get_bias_from_user():
-    bias = float(input("Enter bias term: "))
-    return bias
-
-
-# function that gets dummy target from user for purpose of manual simulation of learning process
-def get_dummy_targets_from_user(n):
-    targets = []
-    for i in range(n):
-        target = float(input(f"Enter target {i + 1}: "))
-        targets.append(target)
-
-    return targets
-
-
-# function to get index of the weight to be changed temporarily
-# to add bounding check on the row and column that we accept from user
-def get_weight_index_from_user():
-    weight_index = []
-    for i in range(2):
-        if i == 0:
-            row = int(input("Enter row index: "))
-            weight_index.append(row)
-        else:
-            col = int(input("Enter column index: "))
-            weight_index.append(col)
-
-    return tuple(weight_index)
-
-
-# get input to network from user
-def get_nw_input_from_user():
-    nw_input = []
-    n = int(input("Enter number of inputs: "))
-    for i in range(n):
-        single_input = float(input(f"Enter input {i + 1}: "))
-        nw_input.append(single_input)
-
-    return nw_input
-
-
 # function that gracefully runs the temporary weight change simulation
 def simulate_temp_weight_change():
     nw_input = get_nw_input_from_user()
@@ -275,6 +226,22 @@ def simulate_temp_weight_change():
         else:
             print("Quitting weight temperory change simulation...")
             time.sleep(2)
+
+
+# mini optimizer algorithm to automate temperory weight changes
+def improve_once():
+    # change every weight by a random delta (in next iteration as in, in the simulation function do no again improve by a random delta, just improve by -delta to see which direction increased loss / decreased loss)
+    # calculate which weight changes increased loss and which decreased loss
+    # 23 weight changes decreased loss
+    # 45 weight changes increased loss
+    # final loss
+    # by how much loss decreased / increased from the previous iteration
+    # and this should be an iterable function inside the simulate_improve_once()
+    pass
+
+
+def simulate_improve_once():
+    pass
 
 
 # Test cases:
