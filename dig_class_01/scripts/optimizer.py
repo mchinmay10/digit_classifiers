@@ -77,3 +77,20 @@ def simulate_temp_weight_change():
         else:
             print("Quitting weight temperory change simulation...")
             time.sleep(2)
+
+
+# mini optimizer algorithm to automate temperory weight changes
+def improve_once():
+    # change every weight by a random delta (in next iteration as in, in the simulation function do no again improve by a random delta, just improve by -delta to see which direction increased loss / decreased loss)
+    # calculate which weight changes increased loss and which decreased loss
+    # 23 weight changes decreased loss
+    # 45 weight changes increased loss
+    # final loss
+    # by how much loss decreased / increased from the previous iteration
+    # and this should be an iterable function inside the simulate_improve_once()
+    pass
+    # for every weight keep tweaking untill loss decreases
+
+
+def simulate_improve_once():
+    pass

@@ -156,22 +156,6 @@ def manual_optimisation():
             time.sleep(1)
 
 
-# mini optimizer algorithm to automate temperory weight changes
-def improve_once():
-    # change every weight by a random delta (in next iteration as in, in the simulation function do no again improve by a random delta, just improve by -delta to see which direction increased loss / decreased loss)
-    # calculate which weight changes increased loss and which decreased loss
-    # 23 weight changes decreased loss
-    # 45 weight changes increased loss
-    # final loss
-    # by how much loss decreased / increased from the previous iteration
-    # and this should be an iterable function inside the simulate_improve_once()
-    pass
-
-
-def simulate_improve_once():
-    pass
-
-
 # Test cases:
 def neuron_forward_test():
     print(f"Executing test cases for forward function of neuron class...")
