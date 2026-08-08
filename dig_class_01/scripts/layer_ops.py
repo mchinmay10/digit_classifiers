@@ -2,8 +2,6 @@ import time
 import random
 from layers import DenseLayer_v2
 from losses import mean_squared_error
-from layer_helper import get_bias_from_user
-from visual import clear_screen
 
 
 # function to predict the output of the neural network.
@@ -48,37 +46,6 @@ def current_state_of_nw(nw_input, num_neurons, weight_matrix, bias, target):
     loss = round(mean_squared_error(target, active_output), 3)
     print(f"Loss: {loss}")
     return loss
-
-
-# function to manual optimize the weights and biases of a layer to minimise loss value
-def manual_optimisation():
-    print("----Initialising Manual Optimisation---")
-    time.sleep(1)
-    num_neurons = int(input("Please enter number of neurons: "))
-    CONTINUE = 1
-    nw_input = [1, 1]
-    input_len = len(nw_input)
-    weight_matrix = [[0.5 for _ in range(input_len)] for _ in range(num_neurons)]
-    bias = 0
-    target = [1]
-    while CONTINUE == 1:
-        clear_screen()
-        loss = current_state_of_nw(nw_input, num_neurons, weight_matrix, bias, target)
-        CONTINUE = int(input("Continue manual optimisation? [0/1]: "))
-        if CONTINUE == 1:
-            print("Update weight matrix...")
-            time.sleep(1)
-            for i in range(num_neurons):
-                for j in range(input_len):
-                    weight_matrix[i][j] = float(
-                        input(f"Value of w at: row {i} and column {j}: ")
-                    )
-            print("Update bias...")
-            time.sleep(1)
-            bias = get_bias_from_user()
-        else:
-            print(f"Quitting manual optimisation...")
-            time.sleep(1)
 
 
 # Test cases:

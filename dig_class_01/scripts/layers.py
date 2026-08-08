@@ -2,8 +2,6 @@ import time
 import random
 from vector import dot
 from activations import sigmoid
-from losses import mean_squared_error
-from visual import clear_screen
 
 
 # A Neuron is the basic computation unit of a Neural Network
