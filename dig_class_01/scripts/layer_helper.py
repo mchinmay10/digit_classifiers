@@ -1,3 +1,12 @@
+"""
+Contains the following functions:
+1. get_weights_from_user
+2. get_bias_from_user
+3. get_dummy_targts_from_user
+4. get_weight_index_from_user
+5. get_nw_input_from_user
+"""
+
 import time
 
 
@@ -22,6 +31,7 @@ def get_bias_from_user():
 
 
 # function that gets dummy target from user for purpose of manual simulation of learning process
+# where 'n' is naturally the number of nuerons in the pre-output layer
 def get_dummy_targets_from_user(n):
     targets = []
     for i in range(n):
