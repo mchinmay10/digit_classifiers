@@ -1,3 +1,13 @@
+"""
+Contains the following functions
+1. mean_val_v1
+2. mean_val_v2
+3. absolute_error
+4. mean_absolute_error
+5. squared_error
+6. mean_squared_error
+"""
+
 import time
 from vector import ones, vector_length, dot, generate_random_vector
 
