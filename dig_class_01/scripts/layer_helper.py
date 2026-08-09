@@ -8,13 +8,23 @@ Contains the following functions:
 """
 
 import time
+from visual import load_print
 
 
-# function to recieve weights from user (mainly for manual optimisation and initialisation purpose)
+# function to recieve nueron weights from user
+def get_neuron_weights_from_user(input_len):
+    weights_array = [0.0 for _ in range(input_len)]
+    load_print("Enter weights array")
+    for i in range(input_len):
+        weights_array[i] = float(input(f"Enter weight no. {i + 1}: "))
+
+    return weights_array
+
+
+# function to recieve layer weights from user (mainly for manual optimisation and initialisation purpose)
 def get_weights_from_user(num_neurons, input_len):
     weight_matrix = [[0.0 for _ in range(input_len)] for _ in range(num_neurons)]
-    print("Enter weight matrix")
-    time.sleep(3)
+    load_print("Enter weights matrix")
     for i in range(num_neurons):
         for j in range(input_len):
             weight_matrix[i][j] = float(
@@ -25,7 +35,7 @@ def get_weights_from_user(num_neurons, input_len):
 
 
 # function to recieve bias term from user
-def get_bias_from_user():
+def get_bias_from_user() -> float:
     bias = float(input("Enter bias term: "))
     return bias
 
