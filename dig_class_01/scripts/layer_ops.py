@@ -1,3 +1,10 @@
+"""
+Contains the following functions:
+1. predict_digit
+2. simulate_fwd_pass
+3. current_state_of_nw
+"""
+
 import time
 import random
 from layers import DenseLayer_v2
