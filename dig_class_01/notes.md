@@ -40,3 +40,17 @@ To give a more intuitive explanation, think of bias as the neuron's tendency to 
 As a very humane thought process, I believe that the network should also care how confident it was while giving a prediction. This is because if we instruct our network in a very binary sense , it would never know the steps it has to take to give out more and more correct predictions when it sees new data (sees data it hasn't been trained on). So while we should point out to the network that whether it has done a mistake or not, we should also give a direction to the network to minimise it's chance of repeating the same mistake (same mistake as in mistake while performing the same task) again and again. \
 In addition to this, an important nuance is in differentiating slight mistakes from severe mistakes. \
 So, to frame this answer in a better way; 'A binary notion of correct / incorrect throws away useful information. Measuring confidence gives us a richer description of how good or bad a prediction is.
+
+### Try to formulate a quantity that describes: How rapidly the loss changes when I change the weight.
+
+Taking inspiration from physics, we can determine how rapidly a quantity changes w.r.t another using ratio of differences. \
+In other words we can determine how rapidly the loss changes when we change the weight by finding out the rate of change of loss w.r.t. change of weight. \
+This derives the following equation rate of {(change of loss) / (change of weight)}. \
+More mathematically this could be represented as (loss2 - loss1) / (weight2 - weight1).
+
+### What does the sign of the above derived quantity represent ?
+
+It simply means the following: \
+
+1. If sign of derived quantity is negative: increasing weight will decrease loss and vice versa (inversely proportional to each other),
+2. if sign of derived quantity is positive: increasing weight will increase loss and decreasing weight will decrease loss (directly proportional to each other).
