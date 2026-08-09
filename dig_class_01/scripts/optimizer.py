@@ -1,12 +1,13 @@
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-from layers import DenseLayer_v2
-from losses import mean_squared_error
-from visual import clear_screen
+from layers import Neuron, DenseLayer_v2
+from losses import squared_error, mean_squared_error
+from visual import clear_screen, function_header, load_print
 from layer_helper import (
     get_nw_input_from_user,
     get_weights_from_user,
+    get_neuron_weights_from_user,
     get_bias_from_user,
     get_weight_index_from_user,
     get_dummy_targets_from_user,
@@ -47,15 +48,18 @@ def manual_optimisation():
 
 # function to manually optimise the weights and then print the corresponding loss in a tabular format
 def neighbourhood_optimisation_tabular() -> tuple | None:
-    print("----Initialising manual optimisation in tabular format----")
+    function_header("Initialising manual optimisation in tabular format")
     time.sleep(1)
     print("Enter following specs only!")
     print("num_neurons = 1")
     print("num of inputs = 1")
     time.sleep(2)
     num_neurons = int(input("Enter number of neurons: "))
+    time.sleep(2)
     nw_inputs = get_nw_input_from_user()
+    time.sleep(2)
     weights = get_weights_from_user(num_neurons, len(nw_inputs))
+    time.sleep(2)
     weights_array = [weights[0][0] + float(dw) for dw in np.linspace(-0.5, 0.5, 9)]
     iter_items = len(weights_array)
     bias = get_bias_from_user()
@@ -75,7 +79,7 @@ def neighbourhood_optimisation_tabular() -> tuple | None:
     # loop for printing the table
     print("Weight\t Prediction\t\t Loss\t")
     for i in range(iter_items):
-        print(f"{weights_array[i]}\t {prediction_array[i]}\t {loss_array[i]}")
+        print(f"{weights_array[i]}\t {prediction_array[i][0]}\t {loss_array[i]}")
 
     return (weights_array, loss_array)
 
@@ -88,6 +92,8 @@ def neighbourhood_optimisation_graph():
     if axes:
         weights, losses = axes
 
+    function_header("Representing optimisation in graphical format")
+
     plt.figure(figsize=(100, 100))
 
     plt.plot(weights, losses, color="blue", linestyle="-")
@@ -98,6 +104,59 @@ def neighbourhood_optimisation_graph():
     plt.grid(True, alpha=0.6)
 
     plt.show()
+
+
+# function that returns loss in order to find better direction for a single neuron
+def try_weight_directions(
+    nw_input: list, neuron: Neuron, target: list, step_size: float
+):
+    activ_output = neuron.forward(nw_input)
+    loss = squared_error(target[0], activ_output)
+    print(f"Initial Loss: {loss}")
+    store_weights = neuron.weights.copy()
+    num_weights = len(nw_input)
+    load_print(f"Incresing weights by {step_size}...")
+    for i in range(num_weights):
+        neuron.weights[i] += step_size
+    load_print(f"Increased weights: {neuron.weights}")
+    activ_output = neuron.forward(nw_input)
+    weight_increase_loss = squared_error(target[0], activ_output)
+    print(f"Loss if weight increased: {weight_increase_loss}")
+    load_print("Restoring original weights...")
+    neuron.weights = store_weights
+    load_print(f"Decreasing weights by {step_size}...")
+    for i in range(num_weights):
+        neuron.weights[i] -= step_size
+    load_print(f"Decreased weights: {neuron.weights}")
+    activ_output = neuron.forward(nw_input)
+    weight_decrease_loss = squared_error(target[0], activ_output)
+    print(f"Loss if weight decreased: {weight_decrease_loss}")
+
+    return (loss, weight_decrease_loss, weight_increase_loss)
+
+
+# determine which direction is better for a single weight change (for a single neuron)
+def find_better_direction():
+    function_header("Determine which direction is better based on loss values")
+    nw_input = get_nw_input_from_user()
+    input_len = len(nw_input)
+    weights = get_neuron_weights_from_user(input_len)
+    bias = get_bias_from_user()
+    load_print("Initialising nueron...")
+    nueron = Neuron(weights, bias)
+    target = get_dummy_targets_from_user(1)
+    step_size = float(input("Enter step size: "))
+    loss, weight_decrease_loss, weight_increase_loss = try_weight_directions(
+        nw_input, nueron, target, step_size
+    )
+    if loss > weight_decrease_loss:
+        load_print("Recommended action: decrease weight")
+    if loss > weight_increase_loss:
+        load_print("Recommended action: increase weight")
+    if loss < weight_decrease_loss and loss < weight_increase_loss:
+        load_print(
+            "Recommended action: change step size to find ideal weight value for minimum loss"
+        )
 
 
 # helper function that temperorily changes one weight, computes loss and resores the original weight
@@ -188,4 +247,5 @@ def simulate_improve_once():
 if __name__ == "__main__":
     # simulate_temp_weight_change()
     # neighbourhood_optimisation_tabular()
-    neighbourhood_optimisation_graph()
+    # neighbourhood_optimisation_graph()
+    find_better_direction()
