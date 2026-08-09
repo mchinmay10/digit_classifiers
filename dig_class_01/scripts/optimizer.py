@@ -244,6 +244,11 @@ def simulate_improve_once():
     pass
 
 
+# function that calculates rate of change of loss with respect to that of the change of weights
+def primitive_derivative():
+    pass
+
+
 if __name__ == "__main__":
     # simulate_temp_weight_change()
     # neighbourhood_optimisation_tabular()
