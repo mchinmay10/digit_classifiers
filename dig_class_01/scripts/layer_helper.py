@@ -5,9 +5,11 @@ Contains the following functions:
 3. get_dummy_targts_from_user
 4. get_weight_index_from_user
 5. get_nw_input_from_user
+6. generate_dummy_image
+7. dummy_target_dig_vector
 """
 
-import time
+import random
 from visual import load_print
 
 
@@ -75,3 +77,21 @@ def get_nw_input_from_user():
         nw_input.append(single_input)
 
     return nw_input
+
+
+# function that generates a dummy 28 * 28 image
+def generate_dummy_image():
+    return [random.randint(0, 255) for _ in range(784)]
+
+
+# fuunction that generates a dummy target output as a digit in the form of a one-hot vector
+def dummy_target_dig_vector():
+    dummy_index = random.randint(0, 9)
+    one_hot_digit = []
+    for i in range(10):
+        if i == dummy_index:
+            one_hot_digit.append(1)
+        else:
+            one_hot_digit.append(0)
+
+    return one_hot_digit
