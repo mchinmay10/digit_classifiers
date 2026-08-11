@@ -41,7 +41,7 @@ As a very humane thought process, I believe that the network should also care ho
 In addition to this, an important nuance is in differentiating slight mistakes from severe mistakes. \
 So, to frame this answer in a better way; 'A binary notion of correct / incorrect throws away useful information. Measuring confidence gives us a richer description of how good or bad a prediction is.
 
-### Try to formulate a quantity that describes: How rapidly the loss changes when I change the weight.
+### Try to formulate a quantity that describes: How rapidly the loss changes when we change the weight.
 
 Taking inspiration from physics, we can determine how rapidly a quantity changes w.r.t another using ratio of differences. \
 In other words we can determine how rapidly the loss changes when we change the weight by finding out the rate of change of loss w.r.t. change of weight. \
