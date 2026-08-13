@@ -11,6 +11,9 @@ from layer_helper import (
     get_bias_from_user,
     get_weight_index_from_user,
     get_dummy_targets_from_user,
+    generate_dummy_image,
+    init_weights,
+    gen_step_sizes,
 )
 from layer_ops import current_state_of_nw
 
@@ -142,12 +145,12 @@ def find_better_direction():
     input_len = len(nw_input)
     weights = get_neuron_weights_from_user(input_len)
     bias = get_bias_from_user()
-    load_print("Initialising nueron...")
-    nueron = Neuron(weights, bias)
+    load_print("Initialising neuron...")
+    neuron = Neuron(weights, bias)
     target = get_dummy_targets_from_user(1)
     step_size = float(input("Enter step size: "))
     loss, weight_decrease_loss, weight_increase_loss = try_weight_directions(
-        nw_input, nueron, target, step_size
+        nw_input, neuron, target, step_size
     )
     if loss > weight_decrease_loss:
         load_print("Recommended action: decrease weight")
@@ -244,13 +247,46 @@ def simulate_improve_once():
     pass
 
 
-# function that calculates rate of change of loss with respect to that of the change of weights
-def primitive_derivative():
-    pass
+# function that calculates rate of change of loss with respect to that of the change of weight
+def primitive_derivative(
+    step_sizes: list[float], losses: list[float], init_loss: float
+):
+    loss_diff = []
+    pri_der = []
+    iters = len(losses)
+    for i in range(iters):
+        pri_der.append((losses[i] - init_loss) / step_sizes[i])
+
+    return pri_der
+
+
+# to experiment with a neuron of 784 weights
+def primitive_derivative_simulation():
+    function_header(
+        "Derivative in its most primitive form (couldn't think of a better header)!"
+    )
+    load_print("Generating dummy image...")
+    nw_input = generate_dummy_image()
+    input_len = len(nw_input)
+    load_print("Initialising random weights...")
+    weights = init_weights(input_len)
+    bias = get_bias_from_user()
+    load_print("Initialising neuron...")
+    neuron = Neuron(weights, bias)
+    target = get_dummy_targets_from_user(1)
+    activ_output = neuron.forward(nw_input)
+    load_print("Calculating initial loss...")
+    init_loss = round(squared_error(target[0], activ_output), 2)
+    load_print(f"Initial loss: {init_loss}")
+    load_print(
+        "Generating random step sizes for primitive gradient descent initialisation..."
+    )
+    step_sizes = gen_step_sizes(input_len)
 
 
 if __name__ == "__main__":
     # simulate_temp_weight_change()
     # neighbourhood_optimisation_tabular()
     # neighbourhood_optimisation_graph()
-    find_better_direction()
+    # find_better_direction()
+    primitive_derivative_simulation()

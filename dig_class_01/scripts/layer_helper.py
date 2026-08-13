@@ -84,6 +84,16 @@ def generate_dummy_image():
     return [random.randint(0, 255) for _ in range(784)]
 
 
+# function that initialises weights for a neuron
+def init_weights(n):
+    return [round(random.random(), 2) for _ in range(n)]
+
+
+# function that generates random step sizes
+def gen_step_sizes(n):
+    return [round(random.uniform(-1, 1), 2) for _ in range(n)]
+
+
 # fuunction that generates a dummy target output as a digit in the form of a one-hot vector
 def dummy_target_dig_vector():
     dummy_index = random.randint(0, 9)
