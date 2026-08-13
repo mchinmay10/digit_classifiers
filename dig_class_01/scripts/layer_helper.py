@@ -89,9 +89,16 @@ def init_weights(n):
     return [round(random.random(), 2) for _ in range(n)]
 
 
+def generate_num_not_zero():
+    num = 1 - random.random()
+    if random.choice([True, False]):
+        num = -num
+    return num
+
+
 # function that generates random step sizes
 def gen_step_sizes(n):
-    return [round(random.uniform(-1, 1), 2) for _ in range(n)]
+    return [round(generate_num_not_zero(), 3) for _ in range(n)]
 
 
 # fuunction that generates a dummy target output as a digit in the form of a one-hot vector

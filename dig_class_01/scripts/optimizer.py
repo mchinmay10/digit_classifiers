@@ -247,11 +247,21 @@ def simulate_improve_once():
     pass
 
 
+# function to calculate descent step from scratch
+# to change this function
+def primitive_descent(weights: list[float], step_sizes: list[float]):
+    updated_weights = []
+    for i in range(len(weights)):
+        updated_weights.append(weights[i] + step_sizes[i])
+
+    return updated_weights
+
+
 # function that calculates rate of change of loss with respect to that of the change of weight
+# to change this function
 def primitive_derivative(
     step_sizes: list[float], losses: list[float], init_loss: float
 ):
-    loss_diff = []
     pri_der = []
     iters = len(losses)
     for i in range(iters):
@@ -282,6 +292,24 @@ def primitive_derivative_simulation():
         "Generating random step sizes for primitive gradient descent initialisation..."
     )
     step_sizes = gen_step_sizes(input_len)
+    # wrong implementation of this function
+    # to correct this
+    print(step_sizes)
+    updated_weights = primitive_descent(weights, step_sizes)
+    load_print("Updating neuron weights: taking a step...")
+    neuron.weights = updated_weights.copy()
+    activ_output = neuron.forward(nw_input)
+    losses = []
+    for _ in range(input_len):
+        losses.append(round(squared_error(target[0], activ_output), 2))
+    print(losses)
+    load_print("Calculating primitive derivatives for all the weights...")
+    prim_derivative = primitive_derivative(step_sizes, losses, init_loss)
+    load_print("Displaying final results...")
+    for i in range(input_len):
+        load_print(
+            f"Change in weight {i}: {step_sizes[i]}\t Primitive derivative {i}: {prim_derivative[i]}"
+        )
 
 
 if __name__ == "__main__":
