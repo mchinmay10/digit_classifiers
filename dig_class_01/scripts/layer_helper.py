@@ -86,7 +86,7 @@ def generate_dummy_image():
 
 # function that initialises weights for a neuron
 def init_weights(n):
-    return [round(random.random(), 2) for _ in range(n)]
+    return [random.random() for _ in range(n)]
 
 
 def generate_num_not_zero():
@@ -98,7 +98,7 @@ def generate_num_not_zero():
 
 # function that generates random step sizes
 def gen_step_sizes(n):
-    return [round(generate_num_not_zero(), 3) for _ in range(n)]
+    return [generate_num_not_zero() for _ in range(n)]
 
 
 # fuunction that generates a dummy target output as a digit in the form of a one-hot vector

@@ -16,6 +16,7 @@ from layer_helper import (
     gen_step_sizes,
 )
 from layer_ops import current_state_of_nw
+from activations import relu
 
 
 # function to manual optimize the weights and biases of a layer to minimise loss value
@@ -260,14 +261,38 @@ def primitive_descent(weights: list[float], step_sizes: list[float]):
 # function that calculates rate of change of loss with respect to that of the change of weight
 # to change this function
 def primitive_derivative(
-    step_sizes: list[float], losses: list[float], init_loss: float
+    step_sizes: list[float],
+    loss: float,
+    init_loss: float,
 ):
     pri_der = []
-    iters = len(losses)
+    loss_diff = loss - init_loss
+    iters = len(step_sizes)
     for i in range(iters):
-        pri_der.append((losses[i] - init_loss) / step_sizes[i])
+        pri_der.append((loss_diff) / step_sizes[i])
 
     return pri_der
+
+
+# function that calculates derivatives and performs descent step
+def primitive_derivative_descent(
+    nw_input: list[int],
+    neuron: Neuron,
+    weights: list[float],
+    step_sizes: list[float],
+    init_output: float | str,
+    init_loss: float,
+    target: list[float],
+):
+    update_weights = primitive_descent(weights, step_sizes)
+    load_print("Updating neuron weights: taking a step")
+    neuron.weights = update_weights.copy()  # took one step in a random direction
+    update_output = neuron.forward(nw_input)
+    update_loss = squared_error(target[0], update_output)
+    load_print("Calculating primitive derivative for all the weights...")
+    prim_derivative = primitive_derivative(step_sizes, update_loss, init_loss)
+
+    return prim_derivative
 
 
 # to experiment with a neuron of 784 weights
@@ -282,29 +307,19 @@ def primitive_derivative_simulation():
     weights = init_weights(input_len)
     bias = get_bias_from_user()
     load_print("Initialising neuron...")
-    neuron = Neuron(weights, bias)
+    neuron = Neuron(weights, bias, activation=relu)
     target = get_dummy_targets_from_user(1)
     activ_output = neuron.forward(nw_input)
     load_print("Calculating initial loss...")
-    init_loss = round(squared_error(target[0], activ_output), 2)
+    init_loss = squared_error(target[0], activ_output)
     load_print(f"Initial loss: {init_loss}")
     load_print(
         "Generating random step sizes for primitive gradient descent initialisation..."
     )
     step_sizes = gen_step_sizes(input_len)
-    # wrong implementation of this function
-    # to correct this
-    print(step_sizes)
-    updated_weights = primitive_descent(weights, step_sizes)
-    load_print("Updating neuron weights: taking a step...")
-    neuron.weights = updated_weights.copy()
-    activ_output = neuron.forward(nw_input)
-    losses = []
-    for _ in range(input_len):
-        losses.append(round(squared_error(target[0], activ_output), 2))
-    print(losses)
-    load_print("Calculating primitive derivatives for all the weights...")
-    prim_derivative = primitive_derivative(step_sizes, losses, init_loss)
+    prim_derivative = primitive_derivative_descent(
+        nw_input, neuron, weights, step_sizes, activ_output, init_loss, target
+    )
     load_print("Displaying final results...")
     for i in range(input_len):
         load_print(
