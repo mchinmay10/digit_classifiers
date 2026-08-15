@@ -17,7 +17,7 @@ class Neuron:
         self.bias = bias
         self.activation = activation
 
-    def forward(self, x):
+    def forward(self, x) -> float | str:
         dot_product = dot(self.weights, x)
         if dot_product:
             return self.activation(dot_product + self.bias)
