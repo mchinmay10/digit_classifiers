@@ -1,4 +1,5 @@
 import time
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 from layers import Neuron, DenseLayer_v2
@@ -14,6 +15,7 @@ from layer_helper import (
     generate_dummy_image,
     init_weights,
     gen_step_sizes,
+    generate_num_not_zero,
 )
 from layer_ops import current_state_of_nw
 from activations import relu
@@ -249,8 +251,10 @@ def simulate_improve_once():
 
 
 # function to calculate descent step from scratch
-# to change this function
-def primitive_descent(weights: list[float], step_sizes: list[float]):
+def primitive_descent(
+    weights: list[float],
+    step_sizes: list[float],
+):
     updated_weights = []
     for i in range(len(weights)):
         updated_weights.append(weights[i] + step_sizes[i])
@@ -259,7 +263,6 @@ def primitive_descent(weights: list[float], step_sizes: list[float]):
 
 
 # function that calculates rate of change of loss with respect to that of the change of weight
-# to change this function
 def primitive_derivative(
     step_sizes: list[float],
     loss: float,
@@ -280,7 +283,6 @@ def primitive_derivative_descent(
     neuron: Neuron,
     weights: list[float],
     step_sizes: list[float],
-    init_output: float | str,
     init_loss: float,
     target: list[float],
 ):
@@ -318,7 +320,7 @@ def primitive_derivative_simulation():
     )
     step_sizes = gen_step_sizes(input_len)
     prim_derivative = primitive_derivative_descent(
-        nw_input, neuron, weights, step_sizes, activ_output, init_loss, target
+        nw_input, neuron, weights, step_sizes, init_loss, target
     )
     load_print("Displaying final results...")
     for i in range(input_len):
@@ -327,9 +329,113 @@ def primitive_derivative_simulation():
         )
 
 
+# function that estimates direction by a random magnitude for a single descent (neuron with a single weight)
+def gradient_descent_step(
+    nw_input: list[int],
+    neuron: Neuron,
+    target: list[float],
+    learning_rate: float,
+):
+    neuron.weights[0] += learning_rate
+    prediction = neuron.forward(nw_input)
+    loss = squared_error(target[0], prediction)
+    return neuron.weights[0], prediction, loss
+
+
+def single_weight_prim_der(
+    learning_rate: float,
+    loss: float,
+    previous_loss: float,
+):
+    return (loss - previous_loss) / learning_rate
+
+
+def gradient_descent_step_simulation():
+    stored_weights = []
+    prediction_arr = []
+    stored_loss = []
+    load_print("Enter only 1 input value for correct simulation expression!")
+    nw_input = get_nw_input_from_user()
+    init_weights = get_neuron_weights_from_user(1)
+    bias = 0
+    load_print("Initialising Neuron with bias = 0...")
+    neuron = Neuron(init_weights, bias)
+    target = get_dummy_targets_from_user(1)
+    load_print("Starting primitive gradient descent step for 10 iters...")
+    load_print("Printing iter results...")
+    print("Iteration\t\t Weight\t\t Prediction\t\t Loss\t\t Derivative Value")
+    for i in range(10):
+        if i == 0:
+            learning_rate = 0
+            prim_der = 0
+
+            to_store_weight, to_store_prediction, to_store_loss = gradient_descent_step(
+                nw_input,
+                neuron,
+                target,
+                learning_rate,
+            )
+
+        else:
+            if prim_der > 0:
+                learning_rate = -random.random() / 100  # small negative alpha
+            else:
+                learning_rate = random.random() / 100  # small positive alpha
+
+            to_store_weight, to_store_prediction, to_store_loss = gradient_descent_step(
+                nw_input,
+                neuron,
+                target,
+                learning_rate,
+            )
+
+            if learning_rate == 0:
+                learning_rate = generate_num_not_zero()
+            prim_der = single_weight_prim_der(
+                learning_rate,
+                to_store_loss,
+                stored_loss[i - 1],
+            )
+
+        stored_weights.append(to_store_weight)
+        prediction_arr.append(to_store_prediction)
+        stored_loss.append(to_store_loss)
+
+        load_print(
+            f"{i + 1}\t\t {stored_weights[i]}\t\t {prediction_arr[i]}\t\t {stored_loss[i]}\t\t {prim_der}"
+        )
+
+    return stored_weights, stored_loss  # payload for generating plot
+
+
+# same functionality as that of the function: neighbourhood_optimisaition_graph
+# to remove duplicate code functionality later
+def gradient_descent_step_graph():
+    axes = gradient_descent_step_simulation()
+    weights = []
+    losses = []
+    if axes:
+        weights, losses = axes
+
+    function_header("Representing gradient descent step in graphical format")
+
+    plt.figure(figsize=(100, 100))
+
+    plt.plot(weights, losses, color="blue", linestyle="-")
+
+    plt.title("Loss Plot", fontsize=14, fontweight="bold")
+    plt.xlabel("Weight", fontsize=12)
+    plt.ylabel("Loss", fontsize=12)
+    plt.grid(True, alpha=0.6)
+
+    plt.show()
+
+
 if __name__ == "__main__":
     # simulate_temp_weight_change()
     # neighbourhood_optimisation_tabular()
     # neighbourhood_optimisation_graph()
     # find_better_direction()
-    primitive_derivative_simulation()
+    # primitive_derivative_simulation()
+    # gradient_descent_step_simulation()
+    gradient_descent_step_graph()
