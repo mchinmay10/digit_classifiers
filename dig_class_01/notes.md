@@ -54,3 +54,10 @@ It simply means the following: \
 
 1. If sign of derived quantity is negative: increasing weight will decrease loss and vice versa (inversely proportional to each other),
 2. if sign of derived quantity is positive: increasing weight will increase loss and decreasing weight will decrease loss (directly proportional to each other).
+
+### Why does the learning rate matter ?
+
+The learning rate can be imagined as the size with which we change our weights to minimize loss. \
+If the step size (or in other words the learning rate) is too large we might jump over the local minima of the loss function. \
+If the step size is too small the number of iterations might not be sufficient enough to reach the effective local minima. \
+Hence over a series of passes, it is critical to identify the appropriate size of the learning rate.
