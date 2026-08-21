@@ -342,6 +342,7 @@ def gradient_descent_step(
     return neuron.weights[0], prediction, loss
 
 
+# primitve derivative for a single neuron with a single weight
 def single_weight_prim_der(
     learning_rate: float,
     loss: float,
@@ -350,6 +351,7 @@ def single_weight_prim_der(
     return (loss - previous_loss) / learning_rate
 
 
+# function that simulates the gradient descent step function
 def gradient_descent_step_simulation():
     stored_weights = []
     prediction_arr = []
@@ -409,22 +411,24 @@ def gradient_descent_step_simulation():
 
 
 # same functionality as that of the function: neighbourhood_optimisaition_graph
-# to remove duplicate code functionality later
-def gradient_descent_step_graph():
+# just plots loss vs iterations
+def gradient_descent_step_iteration_graph():
     axes = gradient_descent_step_simulation()
     weights = []
     losses = []
     if axes:
         weights, losses = axes
 
+    iters = [i + 1 for i in range(len(losses))]
+
     function_header("Representing gradient descent step in graphical format")
 
     plt.figure(figsize=(100, 100))
 
-    plt.plot(weights, losses, color="blue", linestyle="-")
+    plt.plot(iters, losses, color="blue", linestyle="-")
 
     plt.title("Loss Plot", fontsize=14, fontweight="bold")
-    plt.xlabel("Weight", fontsize=12)
+    plt.xlabel("Iters", fontsize=12)
     plt.ylabel("Loss", fontsize=12)
     plt.grid(True, alpha=0.6)
 
@@ -438,4 +442,4 @@ if __name__ == "__main__":
     # find_better_direction()
     # primitive_derivative_simulation()
     # gradient_descent_step_simulation()
-    gradient_descent_step_graph()
+    gradient_descent_step_iteration_graph()
