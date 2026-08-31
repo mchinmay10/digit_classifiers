@@ -1,7 +1,9 @@
 import time
 import random
 from vector import dot
-from activations import sigmoid
+from activations import identity_single, sigmoid
+from losses import squared_error
+from visual import function_header, load_print, border_print_v1
 
 
 # A Neuron is the basic computation unit of a Neural Network
@@ -23,6 +25,74 @@ class Neuron:
             return self.activation(dot_product + self.bias)
         else:
             return f"Invalid input {x}"
+
+
+# Designing the second version of a Neuron
+class Neuron_v2:
+
+    def __init__(
+        self,
+        weights: list[float],
+        bias: float,
+    ):
+        self.weights = weights
+        self.bias = bias
+        self.activation = identity_single
+
+        self.fwd = 0
+        self.bwd = 0
+
+    def forward(
+        self,
+        x: list[float],
+        y_hat: float,
+    ) -> None | str:
+
+        self.fwd = 1
+        self.x = x
+        self.y_hat = y_hat
+        self.z = dot(self.weights, x)
+        if self.z:
+            self.a = self.activation(self.z + self.bias)
+            self.loss = squared_error(y_hat, self.a)
+        else:
+            return f"Invalid input {x}"
+
+    def backprop(self):
+        if self.fwd == 0:
+            print("Please peform forward pass first!")
+        else:
+            self.bwd = 1
+            self.dloss_da = 2 * (self.y_hat - self.a)
+            self.da_dz = 1
+            self.da_db = 1
+            self.dz_dw = self.x.copy()
+            self.dloss_db = self.dloss_da * self.da_db
+            self.dloss_dw = []
+            for der in self.dz_dw:
+                self.dloss_dw.append(self.dloss_da * self.da_dz * der)
+
+    def view_props(self):
+        if self.fwd == 0:
+            print("Please perform forward pass first!")
+        else:
+            border_print_v1("Forward propagation:")
+            load_print(f"x:       {self.x}")
+            load_print(f"weights: {self.weights}")
+            load_print(f"bias:    {self.bias}")
+            load_print(f"z:       {self.z}")
+            load_print(f"a:       {self.a}")
+            load_print(f"Loss:    {self.loss}")
+            if self.bwd == 0:
+                print("Please perform backward pass first!")
+            else:
+                border_print_v1("Backward propagation:")
+                load_print(f"Δloss / Δa = {self.dloss_da}")
+                load_print(f"Δa / Δz =    {self.da_dz}")
+                load_print(f"Δz / Δw =    {self.dz_dw}")
+                load_print("Δloss / Δw =  (Δz / Δw) * (Δa / Δz) * (Δloss / Δa)")
+                load_print(f"Δloss / Δw = {self.dloss_dw}")
+                load_print(f"Δloss / Δb = {self.dloss_db}")
 
 
 # Denselayer is a fully connected layer of neurons
@@ -82,6 +152,16 @@ def neuron_forward_test():
     time.sleep(3)
     n1 = Neuron([2, 1], 3)
     print(f"forward([5, 4]) = {n1.forward([5, 4])}")
+
+
+def neuron_v2_forward_test():
+    function_header("Executing test cases for forward function of neuron v2 class")
+    n1 = Neuron_v2([1, 2, 3], 5)
+    n1.forward([2, 3, 4], y_hat=8)
+    load_print(f"calculating forward([2, 3, 4], y_hat=8)...")
+    n1.backprop()
+    load_print(f"performing back prop...")
+    n1.view_props()
 
 
 def ten_neuron_fwd_test():
@@ -145,6 +225,4 @@ if __name__ == "__main__":
     # ten_neuron_fwd_test()
     # dense_layer_v1_forward_test()
     # dense_layer_v2_forward_test()
-    # predict_digit_test()
-    # simulate_fwd_pass()
-    # manual_optimisation()
+    neuron_v2_forward_test()
