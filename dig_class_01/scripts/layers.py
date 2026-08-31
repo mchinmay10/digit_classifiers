@@ -164,6 +164,13 @@ class DenseLayer_v3:
         for neuron in self.neurons:
             neuron.forward(x)
 
+    def forward_out(self, x: list[float]):
+        self.forward(x)
+        fwd_out = []
+        for neuron in self.neurons:
+            fwd_out.append(neuron.a)
+        return fwd_out
+
     def layer_output(self):
         border_print_v1("Layer Output:")
         for neuron in self.neurons:
