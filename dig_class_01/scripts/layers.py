@@ -63,7 +63,7 @@ class Neuron_v2:
             print("Please peform forward pass first!")
         else:
             self.bwd = 1
-            self.dloss_da = 2 * (self.y_hat - self.a)
+            self.dloss_da = -2 * (self.y_hat - self.a)
             self.da_dz = 1
             self.da_db = 1
             self.dz_dw = self.x.copy()
@@ -146,6 +146,21 @@ class DenseLayer_v2:
         return activ_output
 
 
+def compare_with_numerical_gradient():
+    function_header(
+        "Executing comparision for comparing analytical and numerical gradients"
+    )
+    border_print_v1("Analytical Gradients:")
+    n = Neuron_v2([3], 1)
+    n.forward([2], y_hat=0)
+    n.backprop()
+    n.view_props()
+    from backprop import chain_rule_discovery
+
+    border_print_v1("Numerical Gradients")
+    chain_rule_discovery()
+
+
 # Test cases:
 def neuron_forward_test():
     print(f"Executing test cases for forward function of neuron class...")
@@ -225,4 +240,5 @@ if __name__ == "__main__":
     # ten_neuron_fwd_test()
     # dense_layer_v1_forward_test()
     # dense_layer_v2_forward_test()
-    neuron_v2_forward_test()
+    # neuron_v2_forward_test()
+    compare_with_numerical_gradient()
