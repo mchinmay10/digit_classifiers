@@ -4,6 +4,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+# designing the identity function for forward and back prop iterations
+def identity_single(x: float) -> float:
+    return x
+
+
+def identity_arr(nums: list[float]) -> list[float]:
+    iden_arr = []
+    for x in nums:
+        iden_arr.append(identity_single(x))
+
+    return iden_arr
+
+
+def identity(input) -> list[float] | float:
+    if type(input) != list:
+        return identity_single(input)
+    else:
+        return identity_arr(input)
+
+
 # implementing the step function for single input
 def step_single(x):
     if x > 0:
