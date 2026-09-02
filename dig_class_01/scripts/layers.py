@@ -2,6 +2,7 @@ import time
 import random
 from vector import dot
 from activations import identity_single, sigmoid
+from losses import squared_error
 from visual import function_header, load_print, border_print_v1
 
 
@@ -92,6 +93,47 @@ class Neuron_v2:
                 load_print(f"Δloss / Δb = {self.dloss_db}")
 
 
+# Third iteration of Neuron fixing the loss calculation
+class Neuron_v3(Neuron_v2):
+
+    def forward(
+        self,
+        x: list[float],
+    ) -> None | str:
+
+        self.fwd = 1
+        self.x = x
+        self.z = dot(self.weights, x)
+        if self.z:
+            self.a = self.activation(self.z + self.bias)
+        else:
+            return f"Invalid input {x}"
+
+    def calc_loss(
+        self,
+        target,
+    ):
+        self.loss = squared_error(target, self.a)
+
+    def backprop(
+        self,
+        target,
+    ):
+        if self.fwd == 0:
+            print("Please perform forward pass first!")
+        else:
+            self.bwd = 1
+            self.calc_loss(target)
+            self.dloss_da = 2 * (self.a - target)
+            self.da_dz = 1
+            self.da_db = 1
+            self.dz_dw = self.x.copy()
+            self.dloss_db = self.dloss_da * self.da_db
+            self.dloss_dw = []
+            for der in self.dz_dw:
+                self.dloss_dw.append(self.dloss_da * self.da_dz * der)
+
+
 # Denselayer is a fully connected layer of neurons
 class DenseLayer_v1:
 
@@ -143,8 +185,8 @@ class DenseLayer_v2:
         return activ_output
 
 
-# Third version of Denselayer class including back propagation
-class DenseLayer_v3:
+# Second version's second iteration of Denselayer class including back propagation
+class DenseLayer_v2_2:
 
     def __init__(
         self,
@@ -179,6 +221,28 @@ class DenseLayer_v3:
     def backprop(self):
         for neuron in self.neurons:
             neuron.backprop()
+
+
+# Third version of DenseLayer corresponding to third version of Neuron
+class DenseLayer_v3(DenseLayer_v2_2):
+
+    def __init__(
+        self,
+        size: int,
+        weights: list[list[float]],
+        bias: float,
+    ):
+        self.size = size
+        self.weights = weights
+        self.bias = bias
+
+        self.neurons: list[Neuron_v3] = []
+        for i in range(size):
+            self.neurons.append(Neuron_v3(weights[i], bias))
+
+    def backprop(self, target: list[float]):
+        for neuron in self.neurons:
+            neuron.backprop(target)
 
 
 def compare_with_numerical_gradient():
@@ -269,14 +333,14 @@ def dense_layer_v2_forward_test():
     print(f"Layer output: {[round(x, 2) for x in output]}")
 
 
-def dense_layer_v3_forward_test():
+def dense_layer_v2_2_forward_test():
     function_header(
         "Executing test cases for the forward function of dense layer version 3 class..."
     )
     weights = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
     bias = 0
     x = [7.0, 8.0, 9.0]
-    l = DenseLayer_v3(2, weights, bias)
+    l = DenseLayer_v2_2(2, weights, bias)
     l.forward(x)
     l.layer_output()
 
@@ -289,4 +353,4 @@ if __name__ == "__main__":
     # dense_layer_v2_forward_test()
     # neuron_v2_forward_test()
     # compare_with_numerical_gradient()
-    dense_layer_v3_forward_test()
+    dense_layer_v2_2_forward_test()

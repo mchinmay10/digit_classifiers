@@ -61,3 +61,7 @@ The learning rate can be imagined as the size with which we change our weights t
 If the step size (or in other words the learning rate) is too large we might jump over the local minima of the loss function. \
 If the step size is too small the number of iterations might not be sufficient enough to reach the effective local minima. \
 Hence over a series of passes, it is critical to identify the appropriate size of the learning rate.
+
+### Discovering fully connected dense layers in a neural network
+
+If you explore line number 29 (forward() function of Network_v1 class), you would realise that this is nothing but a fully connected neural network as all the outputs of the a layer are fed as inputs to the it's next layer. \

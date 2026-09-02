@@ -1,5 +1,5 @@
 from visual import function_header, load_print
-from layers import Neuron_v2, DenseLayer_v3
+from layers import DenseLayer_v3
 
 
 # First iteration of Network class representing a simple neural network
