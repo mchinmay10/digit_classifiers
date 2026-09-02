@@ -2,6 +2,7 @@ import time
 import random
 from vector import dot
 from activations import identity_single, sigmoid
+from losses import squared_error
 from visual import function_header, load_print, border_print_v1
 
 
@@ -90,6 +91,47 @@ class Neuron_v2:
                 load_print("Δloss / Δw =  (Δz / Δw) * (Δa / Δz) * (Δloss / Δa)")
                 load_print(f"Δloss / Δw = {self.dloss_dw}")
                 load_print(f"Δloss / Δb = {self.dloss_db}")
+
+
+# Third iteration of Neuron fixing the loss calculation
+class Neuron_v3(Neuron_v2):
+
+    def forward(
+        self,
+        x: list[float],
+    ) -> None | str:
+
+        self.fwd = 1
+        self.x = x
+        self.z = dot(self.weights, x)
+        if self.z:
+            self.a = self.activation(self.z + self.bias)
+        else:
+            return f"Invalid input {x}"
+
+    def calc_loss(
+        self,
+        target,
+    ):
+        self.loss = squared_error(target, self.a)
+
+    def backprop(
+        self,
+        target,
+    ):
+        if self.fwd == 0:
+            print("Please perform forward pass first!")
+        else:
+            self.bwd = 1
+            self.calc_loss(target)
+            self.dloss_da = 2 * (self.a - target)
+            self.da_dz = 1
+            self.da_db = 1
+            self.dz_dw = self.x.copy()
+            self.dloss_db = self.dloss_da * self.da_db
+            self.dloss_dw = []
+            for der in self.dz_dw:
+                self.dloss_dw.append(self.dloss_da * self.da_dz * der)
 
 
 # Denselayer is a fully connected layer of neurons
