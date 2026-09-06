@@ -115,14 +115,14 @@ def scalar_multiply(v, c):
 
 
 # implementing the dot product between two vectors from scratch
-def dot(u, v):
+def dot(u, v) -> float | str:
     if vector_length(u) == vector_length(v):
         dot_ = 0
         for x, y in zip(u, v):
             dot_ += x * y
         return dot_
     else:
-        print(f"dot(u, v) is invalid as {vector_length(u)} != {vector_length(v)}")
+        return f"dot(u, v) is invalid as {vector_length(u)} != {vector_length(v)}"
 
 
 # implementing magnitude of a vector from scratch

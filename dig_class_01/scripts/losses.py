@@ -20,7 +20,7 @@ def mean_val_v1(nums: list[float]) -> float:
 def mean_val_v2(nums: list[float]) -> float | str:
     nums_len = vector_length(nums)
     dot_prod = dot(nums, ones(nums_len))
-    if dot_prod:
+    if type(dot_prod) == float:
         return dot_prod / nums_len
     else:
         return "Please debug mean_val_v2(nums) function in losses.py"
