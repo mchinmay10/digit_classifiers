@@ -21,7 +21,7 @@ class Neuron:
 
     def forward(self, x) -> float | str:
         dot_product = dot(self.weights, x)
-        if dot_product:
+        if type(dot_product) == float:
             return self.activation(dot_product + self.bias)
         else:
             return f"Invalid input {x}"
@@ -50,7 +50,7 @@ class Neuron_v2:
         self.fwd = 1
         self.x = x
         self.z = dot(self.weights, x)
-        if self.z:
+        if type(self.z) == float:
             self.a = self.activation(self.z + self.bias)
             self.loss = self.a**2
         else:
@@ -105,7 +105,7 @@ class Neuron_v3(Neuron_v2):
         self.fwd = 1
         self.x = x
         self.z = dot(self.weights, x)
-        if self.z:
+        if type(self.z) == float:
             self.a = self.activation(self.z + self.bias)
         else:
             return f"Invalid input {x}"
@@ -163,7 +163,7 @@ class Neuron_v4:
         self.fwd = 1
         self.x = x
         self.z = dot(self.weights, x)
-        if self.z:
+        if type(self.z) == float:
             self.a = self.activation(self.z + self.bias)
         else:
             return f"Invalid input {x}"
@@ -328,7 +328,7 @@ class DenseLayer_v4:
         self,
         num_neurons: int,
         weights: list[list[float]],
-        bias: float,
+        bias: list[float],
     ):
 
         self.num_neurons = num_neurons
@@ -337,7 +337,7 @@ class DenseLayer_v4:
 
         self.neurons: list[Neuron_v4] = []
         for i in range(num_neurons):
-            self.neurons.append(Neuron_v4(weights[i], bias))
+            self.neurons.append(Neuron_v4(weights[i], bias[i]))
 
     def layer_forward(
         self,

@@ -60,7 +60,7 @@ class Network_v2:
         num_layers: int,
         neurons_in_each_layer: list[int],
         weights: list[list[list[float]]],
-        biases_for_each_layer: list[float],
+        biases_for_each_layer: list[list[float]],
     ):
 
         self.num_layers = num_layers
@@ -104,9 +104,11 @@ class Network_v2:
         target: list[float],
     ):
         self.dloss_dn_outs: list[float] = []
-        for i in range(len(self.network_output)):
+        output_len = len(self.network_output)
+        for i in range(output_len):
             # This depends on the error function used (derivative of error function / loss function)
-            self.dloss_dn_outs.append(self.network_output[i] - target[i])
+            diff = self.network_output[i] - target[i]
+            self.dloss_dn_outs.append(2 * diff / output_len)
 
     def backprop(
         self,
