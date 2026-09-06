@@ -96,6 +96,7 @@ class Neuron_v2:
 # Third iteration of Neuron fixing the loss calculation
 class Neuron_v3(Neuron_v2):
 
+    # Just calculates the forward prop intermediate values
     def forward(
         self,
         x: list[float],
@@ -115,6 +116,7 @@ class Neuron_v3(Neuron_v2):
     ):
         self.loss = squared_error(target, self.a)
 
+    # Just calculates the back prop intermediate values
     def backprop(
         self,
         target,
@@ -128,10 +130,65 @@ class Neuron_v3(Neuron_v2):
             self.da_dz = 1
             self.da_db = 1
             self.dz_dw = self.x.copy()
+            self.dz_dx = self.weights.copy()
             self.dloss_db = self.dloss_da * self.da_db
             self.dloss_dw = []
+            self.dloss_dx = []
             for der in self.dz_dw:
                 self.dloss_dw.append(self.dloss_da * self.da_dz * der)
+            for der in self.dz_dx:
+                self.dloss_dx.append(self.dloss_da * self.da_dz * der)
+
+
+# Designing Neuron_v4 from scratch (to fix inheritance later)
+class Neuron_v4:
+
+    def __init__(
+        self,
+        weights: list[float],
+        bias: float,
+    ):
+        self.weights = weights
+        self.bias = bias
+        self.activation = identity_single
+
+        self.fwd = 0
+        self.bwd = 0
+
+    def forward_calc(
+        self,
+        x: list[float],
+    ) -> None | str:
+
+        self.fwd = 1
+        self.x = x
+        self.z = dot(self.weights, x)
+        if self.z:
+            self.a = self.activation(self.z + self.bias)
+        else:
+            return f"Invalid input {x}"
+
+    def backprop_calc(
+        self,
+        dloss_da,
+    ):
+
+        if self.fwd == 0:
+            print("Please perform forward pass first!")
+        else:
+            self.bwd = 1
+            self.dloss_da = dloss_da
+            self.da_dz = 1
+            self.da_db = 1
+            self.dz_dw = self.x.copy()
+            self.dz_dx = self.weights.copy()
+            self.dloss_db = self.dloss_da * self.da_db
+            self.dloss_dw = []
+            self.dloss_dx = []
+            for der in self.dz_dw:
+                self.dloss_dw.append(self.dloss_da * self.da_dz * der)
+            for der in self.dz_dx:
+                self.dloss_dx.append(self.dloss_da * self.da_dz * der)
 
 
 # Denselayer is a fully connected layer of neurons
@@ -186,6 +243,7 @@ class DenseLayer_v2:
 
 
 # Second version's second iteration of Denselayer class including back propagation
+# To add seperate function for "returning" and "printing" backprop props.
 class DenseLayer_v2_2:
 
     def __init__(
@@ -202,10 +260,12 @@ class DenseLayer_v2_2:
         for i in range(size):
             self.neurons.append(Neuron_v2(weights[i], bias))
 
+    # Perform forward prop - forward prop stage 1
     def forward(self, x: list[float]):
         for neuron in self.neurons:
             neuron.forward(x)
 
+    # Returns the layer output for the next layer - forward prop stage 2
     def forward_out(self, x: list[float]):
         self.forward(x)
         fwd_out = []
@@ -213,6 +273,7 @@ class DenseLayer_v2_2:
             fwd_out.append(neuron.a)
         return fwd_out
 
+    # Prints the layer output - forward prop stage 3
     def layer_output(self):
         border_print_v1("Layer Output:")
         for neuron in self.neurons:
@@ -240,9 +301,72 @@ class DenseLayer_v3(DenseLayer_v2_2):
         for i in range(size):
             self.neurons.append(Neuron_v3(weights[i], bias))
 
+    # Perform back prop - Back prop stage 1
     def backprop(self, target: list[float]):
         for neuron in self.neurons:
             neuron.backprop(target)
+
+    # Returns the layer output for a back prop pass - back prop stage 2
+    def backward_out(self, target: list[float]):
+        self.backprop(target)
+        bwd_out = []
+        for neuron in self.neurons:
+            bwd_out.append(neuron.dloss_dx)
+        return bwd_out
+
+    def back_layer_output(self):
+        border_print_v1("Backprop Layer Output:")
+        for neuron in self.neurons:
+            load_print(f"{neuron.dloss_dx}")
+
+
+# Independent iteration of DenseLayer corresponding to the 4th version of Neuron class
+class DenseLayer_v4:
+
+    def __init__(
+        self,
+        num_neurons: int,
+        weights: list[list[float]],
+        bias: float,
+    ):
+
+        self.num_neurons = num_neurons
+        self.weights = weights
+        self.bias = bias
+
+        self.neurons: list[Neuron_v4] = []
+        for i in range(num_neurons):
+            self.neurons.append(Neuron_v4(weights[i], bias))
+
+    def layer_forward(
+        self,
+        x: list[float],
+    ):
+        fwd_vals = []
+        for neuron in self.neurons:
+            neuron.forward_calc(x)
+            fwd_vals.append(neuron.a)
+
+        return fwd_vals
+
+    def layer_backprop(
+        self,
+        dloss_das: list[float],
+    ) -> str | list[float]:
+        bprop_vals: list[float] = []
+        if len(dloss_das) != self.num_neurons:
+            return "Dimensionality Error! Check initialisation..."
+        else:
+            for i in range(self.num_neurons):
+                self.neurons[i].backprop_calc(dloss_das[i])
+            num_neuron_in_prev_layer = len(self.neurons[0].dloss_dx)
+            for i in range(num_neuron_in_prev_layer):
+                temp_gross_dloss_dx = 0
+                for j in range(self.num_neurons):
+                    temp_gross_dloss_dx += self.neurons[j].dloss_dx[i]
+                bprop_vals.append(temp_gross_dloss_dx)
+
+            return bprop_vals
 
 
 def compare_with_numerical_gradient():
