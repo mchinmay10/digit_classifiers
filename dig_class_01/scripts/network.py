@@ -101,25 +101,35 @@ class Network_v2:
 
     def dloss_dnetwork_output(
         self,
+        target: list[float],
     ):
         self.dloss_dn_outs: list[float] = []
         for i in range(len(self.network_output)):
-            self.dloss_dn_outs.append(self.network_output[i] - self.loss)
+            # This depends on the error function used (derivative of error function / loss function)
+            self.dloss_dn_outs.append(self.network_output[i] - target[i])
 
     def backprop(
         self,
         target: list[float],
     ):
         self.loss_calc(target)
-        self.dloss_dnetwork_output()
+        self.dloss_dnetwork_output(target)
         for i in range(self.num_layers - 1, -1, -1):
             intermediate_ders = []
             # Output layer
             if i == self.num_layers - 1:
                 intermediate_ders = self.layers[i].layer_backprop(self.dloss_dn_outs)
+            # Other layers other than outer layer
             else:
                 layer_out_rev = self.layers[i].layer_backprop(intermediate_ders)
                 intermediate_ders = layer_out_rev
+
+    def gradient_descent_step(self, learning_rate):
+        for layer in self.layers:
+            for neuron in layer.neurons:
+                for i in range(len(neuron.weights)):
+                    neuron.weights[i] -= learning_rate * neuron.dloss_dw[i]
+                neuron.bias -= learning_rate * neuron.dloss_db
 
 
 # Test cases

@@ -176,6 +176,7 @@ class Neuron_v4:
         if self.fwd == 0:
             print("Please perform forward pass first!")
         else:
+            # The following depends on the activation function used. (Derivative of the activation functions in the forward direction)
             self.bwd = 1
             self.dloss_da = dloss_da
             self.da_dz = 1
