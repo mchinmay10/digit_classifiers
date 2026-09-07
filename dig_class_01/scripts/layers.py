@@ -1,7 +1,7 @@
 import time
 import random
 from vector import dot
-from activations import identity_single, sigmoid
+from activations import identity_single, sigmoid, der_identity
 from losses import squared_error
 from visual import function_header, load_print, border_print_v1
 
@@ -151,6 +151,7 @@ class Neuron_v4:
         self.weights = weights
         self.bias = bias
         self.activation = identity_single
+        self.der_activation = der_identity
 
         self.fwd = 0
         self.bwd = 0
@@ -164,7 +165,8 @@ class Neuron_v4:
         self.x = x
         self.z = dot(self.weights, x)
         if type(self.z) == float:
-            self.a = self.activation(self.z + self.bias)
+            self.activation_args = self.z + self.bias
+            self.a = self.activation(self.activation_args)
         else:
             return f"Invalid input {x}"
 
@@ -179,8 +181,8 @@ class Neuron_v4:
             # The following depends on the activation function used. (Derivative of the activation functions in the forward direction)
             self.bwd = 1
             self.dloss_da = dloss_da
-            self.da_dz = 1
-            self.da_db = 1
+            self.da_dz = self.der_activation(self.activation_args)
+            self.da_db = self.der_activation(self.activation_args)
             self.dz_dw = self.x.copy()
             self.dz_dx = self.weights.copy()
             self.dloss_db = self.dloss_da * self.da_db
