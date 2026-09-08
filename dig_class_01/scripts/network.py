@@ -1,4 +1,4 @@
-from visual import function_header, load_print
+from visual import function_header, load_print, border_print_v1
 from layers import DenseLayer_v3, DenseLayer_v4
 from losses import mean_squared_error
 
@@ -116,15 +116,30 @@ class Network_v2:
     ):
         self.loss_calc(target)
         self.dloss_dnetwork_output(target)
+        intermediate_ders = []
         for i in range(self.num_layers - 1, -1, -1):
-            intermediate_ders = []
+            # print(f"in netowrk, layer no: {i}")
             # Output layer
             if i == self.num_layers - 1:
                 intermediate_ders = self.layers[i].layer_backprop(self.dloss_dn_outs)
+                continue
             # Other layers other than outer layer
-            else:
-                layer_out_rev = self.layers[i].layer_backprop(intermediate_ders)
-                intermediate_ders = layer_out_rev
+            layer_out_rev = self.layers[i].layer_backprop(intermediate_ders)
+            intermediate_ders = layer_out_rev
+
+    def show_grads_loss_wrt_w_and_b(self):
+        function_header("Gradient of Loss w.r.t. weight for each neuron: ")
+        for i in range(self.num_layers):
+            neurons_i_layer = self.layers[i].neurons
+            border_print_v1(f"Layer {i + 1}:")
+            for j in range(len(neurons_i_layer)):
+                border_print_v1(f"Neuron {j + 1}:")
+                weights_j_neuron = neurons_i_layer[j].weights
+                for k in range(len(weights_j_neuron)):
+                    border_print_v1(f"Weight {k + 1}:")
+                    load_print(f"{neurons_i_layer[j].dloss_dw[k]}")
+                border_print_v1(f"Bias {j + 1}")
+                load_print(f"{neurons_i_layer[j].dloss_db}")
 
     def gradient_descent_step(self, learning_rate):
         for layer in self.layers:
@@ -132,6 +147,29 @@ class Network_v2:
                 for i in range(len(neuron.weights)):
                     neuron.weights[i] -= learning_rate * neuron.dloss_dw[i]
                 neuron.bias -= learning_rate * neuron.dloss_db
+
+
+def compare_analytical_numerical_grads():
+    num_layers = 2
+    neurons_in_each_layer = [2, 1]
+    weights = [[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0]]]
+    biases_for_each_layer = [[0.5, 0.5], [0.2]]
+    network = Network_v2(
+        num_layers,
+        neurons_in_each_layer,
+        weights,
+        biases_for_each_layer,
+    )
+    n_input = [1.0, 1.0]
+    target = [0.5, 0.5]
+    epsilon = 0.0001
+    load_print("Forward pass started...")
+    network.forward(n_input)
+    load_print("Forward pass finished. Proceeding with backprop...")
+    network.backprop(target)
+    load_print("Backprop finished...")
+    # print(network.layers[0].neurons[0].bwd)
+    network.show_grads_loss_wrt_w_and_b()
 
 
 # Test cases
@@ -145,4 +183,5 @@ def network_v1_forward_test():
 
 
 if __name__ == "__main__":
-    network_v1_forward_test()
+    # network_v1_forward_test()
+    compare_analytical_numerical_grads()

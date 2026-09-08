@@ -179,6 +179,7 @@ class Neuron_v4:
             print("Please perform forward pass first!")
         else:
             # The following depends on the activation function used. (Derivative of the activation functions in the forward direction)
+            # print(f"reached...")
             self.bwd = 1
             self.dloss_da = dloss_da
             self.da_dz = self.der_activation(self.activation_args)
@@ -354,13 +355,14 @@ class DenseLayer_v4:
 
     def layer_backprop(
         self,
-        dloss_das: list[float],
+        dloss_das: list[float] | str,
     ) -> str | list[float]:
         bprop_vals: list[float] = []
         if len(dloss_das) != self.num_neurons:
             return "Dimensionality Error! Check initialisation..."
         else:
             for i in range(self.num_neurons):
+                # print(f"in layer, neuron no: {i}")
                 self.neurons[i].backprop_calc(dloss_das[i])
             num_neuron_in_prev_layer = len(self.neurons[0].dloss_dx)
             for i in range(num_neuron_in_prev_layer):
