@@ -128,7 +128,7 @@ class Network_v2:
             intermediate_ders = layer_out_rev
 
     def show_grads_loss_wrt_w_and_b(self):
-        function_header("Gradient of Loss w.r.t. weight for each neuron: ")
+        function_header("Gradient of Loss w.r.t. weight for each neuron (Analytical): ")
         for i in range(self.num_layers):
             neurons_i_layer = self.layers[i].neurons
             border_print_v1(f"Layer {i + 1}:")
@@ -136,10 +136,34 @@ class Network_v2:
                 border_print_v1(f"Neuron {j + 1}:")
                 weights_j_neuron = neurons_i_layer[j].weights
                 for k in range(len(weights_j_neuron)):
-                    border_print_v1(f"Weight {k + 1}:")
-                    load_print(f"{neurons_i_layer[j].dloss_dw[k]}")
-                border_print_v1(f"Bias {j + 1}")
-                load_print(f"{neurons_i_layer[j].dloss_db}")
+                    load_print(f"Weight {k + 1}: {neurons_i_layer[j].dloss_dw[k]}")
+                load_print(f"Bias {j + 1}: {neurons_i_layer[j].dloss_db}")
+
+    def calc_gradients_numerically(
+        self,
+        n_input: list[float],
+        epsilon: float,
+        target: list[float],
+    ):
+        function_header("Gradient of Loss w.r.t. weight for each neuron (Numerical): ")
+        for i in range(self.num_layers):
+            neurons_i_layer = self.layers[i].neurons
+            border_print_v1(f"Layer {i + 1}:")
+            for j in range(len(neurons_i_layer)):
+                border_print_v1(f"Neuron {j + 1}:")
+                weights_j_neuron = neurons_i_layer[j].weights
+                for k in range(len(weights_j_neuron)):
+                    neurons_i_layer[j].weights[k] += epsilon
+                    self.forward(n_input)
+                    self.loss_calc(target)
+                    arg_1 = self.loss
+                    neurons_i_layer[j].weights[k] -= 2 * epsilon
+                    self.forward(n_input)
+                    self.loss_calc(target)
+                    arg_2 = self.loss
+                    dloss_dw_k = (arg_1 - arg_2) / (2 * epsilon)
+                    load_print(f"Weight {k + 1}: {dloss_dw_k}")
+                    neurons_i_layer[j].weights[k] += epsilon
 
     def gradient_descent_step(self, learning_rate):
         for layer in self.layers:
@@ -162,14 +186,16 @@ def compare_analytical_numerical_grads():
     )
     n_input = [1.0, 1.0]
     target = [0.5, 0.5]
-    epsilon = 0.0001
+    epsilon = 0.001
     load_print("Forward pass started...")
     network.forward(n_input)
     load_print("Forward pass finished. Proceeding with backprop...")
     network.backprop(target)
     load_print("Backprop finished...")
-    # print(network.layers[0].neurons[0].bwd)
+    border_print_v1("Analytical Gradients:")
     network.show_grads_loss_wrt_w_and_b()
+    border_print_v1("Numerical Gradients:")
+    network.calc_gradients_numerically(n_input, epsilon, target)
 
 
 # Test cases
