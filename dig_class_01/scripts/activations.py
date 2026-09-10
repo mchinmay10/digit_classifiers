@@ -24,6 +24,10 @@ def identity(input) -> list[float] | float:
         return identity_arr(input)
 
 
+def der_identity(input) -> float:
+    return 1.0
+
+
 # implementing the step function for single input
 def step_single(x):
     if x > 0:
