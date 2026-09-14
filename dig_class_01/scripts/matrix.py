@@ -1,3 +1,12 @@
+"""
+Contains the following functions:
+1. mat_shape
+2. mat_transpose
+3. isValidMatrixMul
+4. matmul
+5. dim_of_matrix
+"""
+
 import time
 from data_helper import vector_length
 from vector import dot
