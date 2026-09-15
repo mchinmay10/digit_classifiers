@@ -41,8 +41,18 @@ def isValidMatrixMul(A, B):
         return False
 
 
+# check if the matrix addition is valid or not:
+def isValidMatrixAdd(A, B):
+    row_A, col_A = mat_shape(A)
+    row_B, col_B = mat_shape(B)
+    if row_A == row_B and col_A == col_B:
+        return True
+    else:
+        return False
+
+
 # implementing the matrix multiplication function from scratch:
-def mat_mul(A, B):
+def mat_mul(A, B) -> list[list] | str:
     prod_mat = []
     temp_row = []
     if isValidMatrixMul(A, B):
@@ -57,6 +67,22 @@ def mat_mul(A, B):
         return prod_mat
     else:
         return "Matrices' dimensions does not match conditions for multiplying!"
+
+
+# Implementing addition
+def mat_add(A, B):
+    sum_mat = []
+    temp_row = []
+    if isValidMatrixAdd(A, B):
+        row, col = mat_shape(A)
+        for i in range(row):
+            for j in range(col):
+                temp_row.append(A[i][j] + B[i][j])
+            sum_mat.append(temp_row)
+            temp_row = []
+        return sum_mat
+    else:
+        return "Matrices' dimensions does not match conditions for summation!"
 
 
 # calculate dim of matrix to be multiplied with input layer
@@ -116,7 +142,7 @@ def dim_of_matrix_test():
 
 if __name__ == "__main__":
     print(f"----Running test cases for matrix.py file----")
-    mat_shape_test()
-    mat_transpose_test()
+    # mat_shape_test()
+    # mat_transpose_test()
     mat_mul_test()
-    dim_of_matrix_test()
+    # dim_of_matrix_test()

@@ -1,6 +1,7 @@
 import time
 import random
 from vector import dot
+from matrix import mat_transpose, mat_mul, mat_add
 from activations import identity_single, sigmoid, der_identity
 from losses import squared_error
 from visual import function_header, load_print, border_print_v1
@@ -389,6 +390,22 @@ def compare_with_numerical_gradient():
     chain_rule_discovery()
 
 
+# for designing a DenseLayers as a matrix
+def layer_as_matrix():
+    function_header("Executing layer forward operation in terms of matrices")
+    x = [[2, 3, 4]]
+    w = [[1, 3, 5], [2, 4, 6]]
+    b = [[10, 20]]
+    w_t = mat_transpose(w)
+    z = mat_mul(x, w_t)
+    a = mat_add(z, b)
+    print("Note activation function not yet added...")
+    print(f"z = w.x")
+    print(f"z = {z}")
+    print(f"a = w.x + b")
+    print(f"a = {a}")
+
+
 # Test cases:
 def neuron_forward_test():
     print(f"Executing test cases for forward function of neuron class...")
@@ -482,4 +499,5 @@ if __name__ == "__main__":
     # dense_layer_v2_forward_test()
     # neuron_v2_forward_test()
     # compare_with_numerical_gradient()
-    dense_layer_v2_2_forward_test()
+    # dense_layer_v2_2_forward_test()
+    layer_as_matrix()
