@@ -375,6 +375,36 @@ class DenseLayer_v4:
             return bprop_vals
 
 
+# Representing a DenseLayer completely using matrices and not neurons
+class DenseLayer_v5:
+
+    def __init__(
+        self,
+        weights: list[list[float]],
+        bias: list[float],
+        activation,
+    ):
+        self.weights = weights
+        self.bias = [bias]
+        self.activation = activation
+
+        self.num_neurons = len(weights)
+        self.num_inputs = len(weights[0])
+
+    def layer_forward(
+        self,
+        x: list[float],
+    ) -> None | str:
+        if len(x) == self.num_inputs:
+            self.x = [x]
+            x_t = mat_transpose(self.x)
+            self.z = mat_mul(self.weights, x_t)
+            self.activation_args = mat_add(self.z, self.bias)
+            self.a = self.activation(self.activation_args)
+        else:
+            return f"Invalid input {x}"
+
+
 def compare_with_numerical_gradient():
     function_header(
         "Executing comparision for comparing analytical and numerical gradients"
