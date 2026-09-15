@@ -1,6 +1,7 @@
 import time
 import random
 from vector import dot
+from matrix import mat_transpose, mat_mul, mat_add
 from activations import identity_single, sigmoid, der_identity
 from losses import squared_error
 from visual import function_header, load_print, border_print_v1
@@ -374,6 +375,36 @@ class DenseLayer_v4:
             return bprop_vals
 
 
+# Representing a DenseLayer completely using matrices and not neurons
+class DenseLayer_v5:
+
+    def __init__(
+        self,
+        weights: list[list[float]],
+        bias: list[float],
+        activation,
+    ):
+        self.weights = weights
+        self.bias = [bias]
+        self.activation = activation
+
+        self.num_neurons = len(weights)
+        self.num_inputs = len(weights[0])
+
+    def layer_forward(
+        self,
+        x: list[float],
+    ) -> None | str:
+        if len(x) == self.num_inputs:
+            self.x = [x]
+            x_t = mat_transpose(self.x)
+            self.z = mat_mul(self.weights, x_t)
+            self.activation_args = mat_add(self.z, self.bias)
+            self.a = self.activation(self.activation_args)
+        else:
+            return f"Invalid input {x}"
+
+
 def compare_with_numerical_gradient():
     function_header(
         "Executing comparision for comparing analytical and numerical gradients"
@@ -387,6 +418,22 @@ def compare_with_numerical_gradient():
 
     border_print_v1("Numerical Gradients")
     chain_rule_discovery()
+
+
+# for designing a DenseLayers as a matrix
+def layer_as_matrix():
+    function_header("Executing layer forward operation in terms of matrices")
+    x = [[2, 3, 4]]
+    w = [[1, 3, 5], [2, 4, 6]]
+    b = [[10, 20]]
+    w_t = mat_transpose(w)
+    z = mat_mul(x, w_t)
+    a = mat_add(z, b)
+    print("Note activation function not yet added...")
+    print(f"z = w.x")
+    print(f"z = {z}")
+    print(f"a = w.x + b")
+    print(f"a = {a}")
 
 
 # Test cases:
@@ -482,4 +529,5 @@ if __name__ == "__main__":
     # dense_layer_v2_forward_test()
     # neuron_v2_forward_test()
     # compare_with_numerical_gradient()
-    dense_layer_v2_2_forward_test()
+    # dense_layer_v2_2_forward_test()
+    layer_as_matrix()

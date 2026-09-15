@@ -871,7 +871,6 @@ def vector_length(x):
 
     for _ in x:
         len += 1
-
     return len
 
 

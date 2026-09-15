@@ -198,8 +198,8 @@ def copy_scratch_v2_test():
 def dot_test():
     print("Executing test cases for dot function...")
     time.sleep(3)
-    u = [1, 2, 3]
-    v = [4, 5, 6]
+    u = [1.0, 2, 3]
+    v = [4.0, 5, 6]
     dot_prod = dot(u, v)
     print(f"dot(u, v) = {dot_prod}")
 
@@ -213,10 +213,11 @@ def distance_test():
         print(f"distance([1, 2] , [3, 4, 6]) = {distance([1, 2], [3, 4, 6])}")
 
 
-# zeros_test()
-# ones_test()
-# raw_copy()
-# copy_scratch_test()
-# copy_scratch_v2_test()
-# dot_test()
-# distance_test()
+if __name__ == "__main__":
+    # zeros_test()
+    # ones_test()
+    # raw_copy()
+    # copy_scratch_test()
+    # copy_scratch_v2_test()
+    dot_test()
+    # distance_test()
