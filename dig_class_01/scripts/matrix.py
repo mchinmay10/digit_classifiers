@@ -85,6 +85,22 @@ def mat_add(A, B):
         return "Matrices' dimensions does not match conditions for summation!"
 
 
+# implementing the Hadamard / Schur product (element wise multiplication of matrix elements):
+def hadamard_product(A, B) -> list[list] | str:
+    prod_mat = []
+    temp_row = []
+    if mat_shape(A) == mat_shape(B):
+        row, col = mat_shape(A)
+        for i in range(row):
+            for j in range(col):
+                temp_row.append(A[i][j] * B[i][j])
+            prod_mat.append(temp_row)
+            temp_row = []
+        return prod_mat
+    else:
+        return "Matrices' dimension does not match condition for Hadamard Product"
+
+
 # calculate dim of matrix to be multiplied with input layer
 def dim_of_matrix(input_dim, output_dim):
     input_row, input_col = input_dim
