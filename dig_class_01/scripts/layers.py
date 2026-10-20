@@ -391,11 +391,15 @@ class DenseLayer_v5:
         self.num_neurons = len(weights)
         self.num_inputs = len(weights[0])
 
+        self.fwd = 0
+        self.bwd = 0
+
     def layer_forward(
         self,
         x: list[float],
     ) -> None | str:
         if len(x) == self.num_inputs:
+            self.fwd = 1
             self.x = [x]
             x_t = mat_transpose(self.x)
             self.z = mat_mul(self.weights, x_t)
