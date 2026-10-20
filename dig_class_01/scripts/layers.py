@@ -385,7 +385,9 @@ class DenseLayer_v5:
         activation,
     ):
         self.weights = weights
-        self.bias = [bias]
+        self.bias = [
+            bias
+        ]  # converting list to matrix for matrix operation compatibility
         self.activation = activation
 
         self.num_neurons = len(weights)
@@ -408,6 +410,8 @@ class DenseLayer_v5:
         else:
             return f"Invalid input {x}"
 
+    # to design backprop for a layer represented as matrices
+
 
 def compare_with_numerical_gradient():
     function_header(
@@ -424,7 +428,7 @@ def compare_with_numerical_gradient():
     chain_rule_discovery()
 
 
-# for designing a DenseLayers as a matrix
+# for designing a DenseLayer as a matrix
 def layer_as_matrix():
     function_header("Executing layer forward operation in terms of matrices")
     x = [[2, 3, 4]]

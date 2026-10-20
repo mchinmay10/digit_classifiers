@@ -173,6 +173,9 @@ class Network_v2:
                 neuron.bias -= learning_rate * neuron.dloss_db
 
 
+# to design Network version 3 corresponding to Denselayer version 5 (layer represented as matrix)
+
+
 def compare_analytical_numerical_grads():
     num_layers = 2
     neurons_in_each_layer = [2, 1]
