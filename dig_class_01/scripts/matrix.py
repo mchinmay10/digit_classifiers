@@ -3,7 +3,9 @@ Contains the following functions:
 1. mat_shape
 2. mat_transpose
 3. isValidMatrixMul
-4. matmul
+4. mat_mul
+5. mat_add
+6. hadamard_product
 5. dim_of_matrix
 """
 
