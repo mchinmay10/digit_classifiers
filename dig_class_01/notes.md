@@ -65,3 +65,8 @@ Hence over a series of passes, it is critical to identify the appropriate size o
 ### Discovering fully connected dense layers in a neural network
 
 If you explore line number 29 (forward() function of Network_v1 class), you would realise that this is nothing but a fully connected neural network as all the outputs of the a layer are fed as inputs to the it's next layer.
+
+### Designing neurons, layers and networks with generic activation functions
+
+It is important to consider general activation functions and their derivatives while designing the network in the form of loops. \
+This makes it easier to extend the idea to networks in the matrices form.

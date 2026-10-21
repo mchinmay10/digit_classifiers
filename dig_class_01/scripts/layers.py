@@ -403,10 +403,14 @@ class DenseLayer_v5:
     ) -> None | str:
         if len(x) == self.num_inputs:
             self.fwd = 1
-            self.x = [x]  # to understand why inputs are stored as property of a layer?
+            self.x = [
+                x
+            ]  # TODO: to understand why inputs are stored as property of a layer?
             x_t = mat_transpose(self.x)
             self.z = mat_mul(self.weights, x_t)
+            # TODO: consider transpose of bias too
             self.activation_args = mat_add(self.z, self.bias)
+            # TODO: add matrix versions of activation functions
             self.a = self.activation(self.activation_args)
         else:
             return f"Invalid input {x}"
