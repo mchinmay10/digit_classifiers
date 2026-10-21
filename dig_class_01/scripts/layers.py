@@ -389,6 +389,7 @@ class DenseLayer_v5:
             bias
         ]  # converting list to matrix for matrix operation compatibility
         self.activation = activation
+        self.der_activation = der_function(activation)
 
         self.num_neurons = len(weights)
         self.num_inputs = len(weights[0])
@@ -402,7 +403,7 @@ class DenseLayer_v5:
     ) -> None | str:
         if len(x) == self.num_inputs:
             self.fwd = 1
-            self.x = [x]
+            self.x = [x]  # to understand why inputs are stored as property of a layer?
             x_t = mat_transpose(self.x)
             self.z = mat_mul(self.weights, x_t)
             self.activation_args = mat_add(self.z, self.bias)
@@ -410,7 +411,22 @@ class DenseLayer_v5:
         else:
             return f"Invalid input {x}"
 
+    # to design the fundamental backprop matrix
+    def design_douts_by_dins() -> list[list[float]]:
+        pass
+
     # to design backprop for a layer represented as matrices
+    def layer_backprop(
+        self,
+        dloss_das: list[list[float]] | str,
+    ) -> list[list[float]] | str:
+        bprop_vals: list[list[float]] = []
+        if len(dloss_das[0]) != self.num_neurons:
+            return "Dimensionality Error! Check initialisation..."
+        else:
+            douts_by_dins = design_douts_by_dins()
+            bprop_vals = mat_mul(dloss_das, mat_transpose(douts_by_dins))
+            return bprop_vals
 
 
 def compare_with_numerical_gradient():

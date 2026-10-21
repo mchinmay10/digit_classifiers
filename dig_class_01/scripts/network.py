@@ -106,7 +106,7 @@ class Network_v2:
         self.dloss_dn_outs: list[float] = []
         output_len = len(self.network_output)
         for i in range(output_len):
-            # This depends on the error function used (derivative of error function / loss function)
+            # This depends on the error function used (derivative of loss function)
             diff = self.network_output[i] - target[i]
             self.dloss_dn_outs.append(2 * diff / output_len)
 
